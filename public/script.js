@@ -21,7 +21,7 @@ form.addEventListener('submit', async function (e) {
   input.value = '';
 
   // Show thinking message
-  const thinkingMessageElement = appendMessage('bot', 'Thinking...');
+  const thinkingMessageElement = appendMessage('bot', 'Sedang berpikir...');
 
   try {
     // Send request to backend API
@@ -39,9 +39,13 @@ form.addEventListener('submit', async function (e) {
 
     const data = await response.json();
 
+    // Hapus animasi "thinking" sebelum menambahkan konten baru
+    thinkingMessageElement.classList.remove('thinking');
+    thinkingMessageElement.innerHTML = '';
+
     // Check if result exists
     if (!data.result) {
-      thinkingMessageElement.textContent = 'Sorry, no response received.';
+      thinkingMessageElement.textContent = 'Maaf, tidak ada respons yang diterima.';
       // Remove user message from history so the conversation remains balanced
       conversationHistory.pop();
       return;
@@ -50,12 +54,18 @@ form.addEventListener('submit', async function (e) {
     // Add bot response to conversation history
     conversationHistory.push({ role: 'model', text: data.result });
 
-    // Replace thinking message with actual response
-    thinkingMessageElement.textContent = data.result;
+    // Ganti pesan "thinking" dengan respons aktual, yang dirender sebagai HTML
+    // PERINGATAN: Di aplikasi produksi, selalu bersihkan (sanitize) HTML ini
+    // untuk mencegah serangan XSS. Contoh menggunakan library seperti DOMPurify:
+    // thinkingMessageElement.innerHTML = DOMPurify.sanitize(data.result);
+    thinkingMessageElement.innerHTML = data.result;
+
   } catch (error) {
     console.error('Error:', error);
     // Replace thinking message with error message
-    thinkingMessageElement.textContent = 'Failed to get response from server.';
+    thinkingMessageElement.classList.remove('thinking');
+    thinkingMessageElement.innerHTML = '';
+    thinkingMessageElement.textContent = 'Gagal mendapatkan respons dari server.';
     // Remove user message from history so the conversation remains balanced
     conversationHistory.pop();
   }
@@ -64,7 +74,16 @@ form.addEventListener('submit', async function (e) {
 function appendMessage(sender, text) {
   const msg = document.createElement('div');
   msg.classList.add('message', sender);
-  msg.textContent = text;
+
+  if (sender === 'bot' && text === 'Thinking...') {
+    msg.classList.add('thinking');
+    msg.innerHTML = '<span></span><span></span><span></span>';
+  } else {
+    // Pesan dari pengguna selalu dianggap sebagai teks biasa untuk keamanan.
+    // Respons HTML dari bot ditangani secara terpisah melalui innerHTML.
+    msg.textContent = text;
+  }
+
   chatBox.appendChild(msg);
   chatBox.scrollTop = chatBox.scrollHeight;
   return msg;
