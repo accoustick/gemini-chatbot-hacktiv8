@@ -58,14 +58,16 @@ form.addEventListener('submit', async function (e) {
     // PERINGATAN: Di aplikasi produksi, selalu bersihkan (sanitize) HTML ini
     // untuk mencegah serangan XSS. Contoh menggunakan library seperti DOMPurify:
     // thinkingMessageElement.innerHTML = DOMPurify.sanitize(data.result);
-    thinkingMessageElement.innerHTML = data.result;
+      let formatted = (data.result).replace(/\*\*(.*?)\*\*/g, "<b>$1</b>").replace(/\n/g, "<br>");
+
+    thinkingMessageElement.innerHTML = formatted;
 
   } catch (error) {
     console.error('Error:', error);
     // Replace thinking message with error message
     thinkingMessageElement.classList.remove('thinking');
     thinkingMessageElement.innerHTML = '';
-    thinkingMessageElement.textContent = 'Gagal mendapatkan respons dari server.';
+    thinkingMessageElement.textContent = 'Ups.. lagi banyak yang mau les nih, coba kirim lagi pesannya ya.';
     // Remove user message from history so the conversation remains balanced
     conversationHistory.pop();
   }
