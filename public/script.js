@@ -21,7 +21,7 @@ form.addEventListener('submit', async function (e) {
   input.value = '';
 
   // Show thinking message
-  const thinkingMessageElement = appendMessage('bot', 'Sedang berpikir...');
+  const thinkingMessageElement = appendMessage('bot', 'mengetik...');
 
   try {
     // Send request to backend API
@@ -45,7 +45,7 @@ form.addEventListener('submit', async function (e) {
 
     // Check if result exists
     if (!data.result) {
-      thinkingMessageElement.textContent = 'Maaf, tidak ada respons yang diterima.';
+      thinkingMessageElement.textContent = 'Maaf, guru bot bingung nih, ulangi pesan kamu ya..';
       // Remove user message from history so the conversation remains balanced
       conversationHistory.pop();
       return;
@@ -67,7 +67,7 @@ form.addEventListener('submit', async function (e) {
     // Replace thinking message with error message
     thinkingMessageElement.classList.remove('thinking');
     thinkingMessageElement.innerHTML = '';
-    thinkingMessageElement.textContent = 'Ups.. lagi banyak yang mau les nih, coba kirim lagi pesannya ya.';
+    thinkingMessageElement.textContent = 'Hai, saat ini sedang banyak yang bertanya ke Guru Bot, Ketik ulang pesan kamu ya..';
     // Remove user message from history so the conversation remains balanced
     conversationHistory.pop();
   }
@@ -77,7 +77,7 @@ function appendMessage(sender, text) {
   const msg = document.createElement('div');
   msg.classList.add('message', sender);
 
-  if (sender === 'bot' && text === 'Thinking...') {
+  if (sender === 'bot' && text === 'mengetik...') {
     msg.classList.add('thinking');
     msg.innerHTML = '<span></span><span></span><span></span>';
   } else {

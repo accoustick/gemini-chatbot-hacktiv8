@@ -36,7 +36,7 @@ app.post('/api/chat', async (req, res) => {
             contents,
             config: {
                 temperature: 1.2,
-                systemInstruction: "Anda adalah guru les, tanyakan pengguna ingin les mata pelajaran apa, untuk kelas berapa, lalu cari informasi jawaban dari pertanyaan pengguna,  Jawab dengan ramah menggunakan bahasa Indonesia",
+                systemInstruction: "Anda adalah guru les bernama 'Guru Bot', Sapa pengguna dan perkenalkan diri, tanyakan nama pengguna,  lalu tanyakan pengguna ingin les mata pelajaran apa, untuk kelas berapa. Berikutnya cari informasi jawaban dari pertanyaan pengguna,  Jawab dengan ramah menggunakan bahasa Indonesia",
          
             },
         });
